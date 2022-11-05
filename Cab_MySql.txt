@@ -1,0 +1,54 @@
+CREATE DATABASE cabmanagement;
+USE cabmanagement;
+CREATE TABLE passenger(
+	Passenger_id INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(50) NOT NULL,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Email VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(50) NOT NULL,
+    Passenger_Mobile INT(10) NOT NULL UNIQUE,
+    Address VARCHAR(100) NOT NULL,
+    DOB DATE
+);
+
+CREATE TABLE cabdeatils(
+	cab_ID INT PRIMARY KEY AUTO_INCREMENT,
+    cab_no INT NOT NULL UNIQUE,
+    cab_model VARCHAR(50) NOT NULL,
+    cab_description VARCHAR(100) NOT NULL,
+    cab_total_capacity INT NOT NULL
+);
+ALTER TABLE cabdeatils
+RENAME TO cabdetails;
+
+CREATE TABLE Driver(
+	Driver_id INT PRIMARY KEY AUTO_INCREMENT,
+    Driver_name VARCHAR(50) NOT NULL,
+    Mobile INT NOT NULL,
+    Gender VARCHAR(10) NOT NULL,
+    Age INT NOT NULL,
+    Cab_ID INT NOT NULL,
+    CONSTRAINT FK_Driver_Cab_ID FOREIGN KEY
+    (Cab_ID) REFERENCES cabdetails(cab_ID)
+);
+
+DROP TABLE Driver;
+
+CREATE TABLE Bookingdetails(
+	booking_id INT PRIMARY KEY AUTO_INCREMENT,
+    Traveldate DATE,
+    Bookingtime TIME,
+    pickup_location TEXT NOT NULL,
+    drop_location TEXT NOT NULL,
+    passenger_id INT ,
+    No_of_Passengers INT NOT NULL,
+    Cost_per_passenger DECIMAL NOT NULL,
+    driver_id INT,
+    cab_id INT,
+    CONSTRAINT FK_Bookingdetails_cab_id FOREIGN KEY
+    (cab_id) REFERENCES cabdetails(cab_ID) ON DELETE CASCADE,
+	CONSTRAINT FK_Bookingdetails_passenger_id FOREIGN KEY
+    (passenger_id) REFERENCES passenger(Passenger_ID) ON DELETE SET NULL,
+    CONSTRAINT FK_Bookingdetails_driverr_id FOREIGN KEY
+    (driver_id) REFERENCES Driver(Driver_id) ON DELETE SET NULL
+);
